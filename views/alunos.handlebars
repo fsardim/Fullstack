@@ -1,0 +1,17 @@
+<body>
+  <p><a href="/novo">Novo Aluno</a></p>
+  <table border="1">
+    <tr>
+      <th>Nome</th>
+      <th>Idade</th>
+      <th>Ações</th>
+    </tr>
+    {{#each list}}
+    <tr>
+      <td>{{nome}}</td>
+      <td>{{idade}}</td>
+      <td><a href="/{{_id}}">Editar</a> | <a href="/del/{{_id}}">Excluir</a></td>
+    </tr>
+    {{/each}}
+  </table>
+</body>
