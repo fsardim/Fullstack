@@ -20,11 +20,13 @@ app.use(bodyParser.json());
 //Conectar ao bd
 mongoose.connect("mongodb://localhost/mastertech");
 
-//Schema
+//Schemas
 const Aluno = mongoose.model("Aluno", {nome: String, idade: Number});
+const Usuario = mongoose.model("Usuario", {nome: String, senha: String});
 
 //Métodos HTTP
 app.get("/", (request, response) => {
+    console.log("Get - /");
     Aluno.find((err, alunos) => {
         if(err){
             return response.render("erro");
@@ -37,21 +39,25 @@ app.get("/", (request, response) => {
     //response.render("alunos", {listagemAlunos: alunos});
 });
 app.get("/novo", (request, response) => {
+    console.log("Get - /novo");
     response.render("novo");
 });
-app.get("/:idAluno", (request, response) => {
-    Aluno.findById(request.params.idAluno, (err, aluno) => {
-        response.render('novo', { a : aluno});
-    });
-});
+
+// app.get("/:idAluno", (request, response) => {
+//     console.log("Get - /idAluno: " + request.params.idAluno);
+//     Aluno.findById(request.params.idAluno, (err, aluno) => {
+//         response.render('novo', { a : aluno});
+//     });
+// });
 
 app.post('/salvar', (request, response) => {
+    console.log("Post - /salvar");
     //Update
     if (request.body._id !== '') {
         let novoValor = request.body;
         Aluno.findByIdAndUpdate(request.body._id, novoValor, {new: true}, (err, aluno) => {
-        response.redirect('/');
-    });
+            response.redirect('/');
+        });
     } else {
         //Insert
         let aluno = new Aluno(request.body);
@@ -61,8 +67,9 @@ app.post('/salvar', (request, response) => {
         });
     }
 });
-  
+
 app.get('/del/:idAluno', (request, response) => {
+    console.log("Get - /del/idAluno");
     Aluno.findByIdAndRemove(request.params.idAluno, (err, aluno) => {
         if(err)
             console.log(err);
@@ -71,13 +78,13 @@ app.get('/del/:idAluno', (request, response) => {
 });
 
 app.get('/login', (request, response) => {
-    console.log("Get-login");
+    console.log("Get - /login");
     response.render('login');
 });
 
 app.post('/login', (request, response) => {
     //Verificar se o formulário foi enviado em branco
-    console.log("Post - login " + request.body + "#");
+    console.log("Post - /login " + request.body + "#");
     if(request.body.nome == '' || request.body.senha == '' ){
         console.log("Erro: alguma das informações em branco");
         response.status(400).render('login');
@@ -109,7 +116,7 @@ app.post('/login', (request, response) => {
 });    
 
 app.get('/admin', (request, response) => {
-    console.log("Get - admin");
+    console.log("Get - /admin");
     response.render('admin');
 });
 
